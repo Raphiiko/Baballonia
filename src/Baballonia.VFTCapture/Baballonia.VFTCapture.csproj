@@ -7,8 +7,16 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+        <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
+    </PropertyGroup>
+
     <ItemGroup>
       <ProjectReference Include="..\Baballonia.SDK\Baballonia.SDK.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DirectShowLib" Version="1.0.0" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
     </ItemGroup>
 
     <ItemGroup>

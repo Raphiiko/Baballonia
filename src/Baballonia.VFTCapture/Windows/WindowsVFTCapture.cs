@@ -30,7 +30,12 @@ public sealed class WindowsVftCapture(string source, ILogger logger) : Capture(s
 
                 // Initialize VideoCapture with URL, timeout for robustness
                 if (int.TryParse(Source, out var index))
-                    _videoCapture = await Task.Run(() => VideoCapture.FromCamera(index, VideoCaptureAPIs.MSMF), cts.Token);
+                {
+                    var mediaFoundationIndex = CameraIndexMapper.DirectShowToMediaFoundation(index, Logger) ?? index;
+                    Logger.LogInformation("VFT: opening DirectShow device {DirectShowIndex} as Media Foundation device {MediaFoundationIndex}",
+                        index, mediaFoundationIndex);
+                    _videoCapture = await Task.Run(() => VideoCapture.FromCamera(mediaFoundationIndex, VideoCaptureAPIs.MSMF), cts.Token);
+                }
                 else
                     _videoCapture = await Task.Run(() => new VideoCapture(Source), cts.Token);
 
